@@ -30,6 +30,7 @@
                 <configuration>
                     <nodeVersion>v18.5.0</nodeVersion>
                     <nodeDownloadRoot>https://nodejs.org/dist/</nodeDownloadRoot>
+                    <workingDirectory>youtube-clone-ui</workingDirectory>
                 </configuration>
                 <executions>
                     <execution>
