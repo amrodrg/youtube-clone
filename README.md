@@ -1,2 +1,2 @@
 # youtube-clone
-A video library project with Spring Boot and Angular
+A video library clone project with Spring Boot and Angular
