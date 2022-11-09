@@ -4,7 +4,7 @@ import com.amr.youtubeclone.model.Video;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import repository.VideoRepository;
+import com.amr.youtubeclone.repository.VideoRepository;
 
 @Service
 @RequiredArgsConstructor

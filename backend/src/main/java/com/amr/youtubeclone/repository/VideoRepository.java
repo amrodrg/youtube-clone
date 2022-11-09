@@ -1,4 +1,4 @@
-package repository;
+package com.amr.youtubeclone.repository;
 
 import com.amr.youtubeclone.model.Video;
 import org.springframework.data.mongodb.repository.MongoRepository;
