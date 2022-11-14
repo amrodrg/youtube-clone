@@ -26,6 +26,7 @@ export class SaveVideoDetailsComponent implements OnInit {
   selectedFileName: string = '';
   videoId: string = '';
   isFileSelected: boolean = false;
+  videoUrl!: string;
 
   constructor(
     private activateRout: ActivatedRoute,
@@ -37,7 +38,11 @@ export class SaveVideoDetailsComponent implements OnInit {
       title: this.title,
       description: this.description,
       videoStatus: this.videoStatus
-    })
+    });
+    this.videoService.getVideo(this.videoId).subscribe(data => {
+      this.videoUrl = data.videoUrl;
+      console.log(this.videoUrl)
+    });
   }
 
   ngOnInit(): void {
