@@ -35,7 +35,7 @@ public class S3Service implements FileService {
             amazonS3Client.putObject(BUCKET_NAME, key, file.getInputStream(), metaData);
         } catch (IOException ioException) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "An exception occured while uploading the file");
+                    "An exception occurred while uploading the file");
         }
 
         amazonS3Client.setObjectAcl(BUCKET_NAME, key, CannedAccessControlList.PublicRead);
