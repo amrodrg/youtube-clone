@@ -29,6 +29,7 @@ export class SaveVideoDetailsComponent implements OnInit {
   isFileSelected: boolean = false;
   videoUrl!: string;
   thumbnailUrl!: string;
+  videoAvailable: boolean = false;
 
   constructor(
     private activateRout: ActivatedRoute,
@@ -44,6 +45,7 @@ export class SaveVideoDetailsComponent implements OnInit {
     this.videoService.getVideo(this.videoId).subscribe(data => {
       this.videoUrl = data.videoUrl;
       this.thumbnailUrl = data.thumbnailUrl;
+      this.videoAvailable = true;
     });
   }
 
@@ -98,7 +100,7 @@ export class SaveVideoDetailsComponent implements OnInit {
     }
 
     this.videoService.saveVideo(videoMetadata).subscribe(data => {
-      this._snackBar.open("Video Metadata updated successfully", data.videoStatus)
+      this._snackBar.open("Video Metadata updated successfully", "OK")
     });
   }
 
