@@ -1,0 +1,12 @@
+{
+  "domain": "dev-megdxxxukcgbfaci.us.auth0.com",
+  "clientId": "3GhfHpXkIwhCM58bQwAjKyYdjkrE1QTN",
+  "scope": "openid profile offline_access email",
+  "responseType": "code",
+  "silentRenew": true,
+  "useRefreshToken": true,
+  "secureRoutes": ["http://localhost:8080/"],
+  "customParamsAuthRequest": {
+    "audience": "http://localhost:8080/"
+  }
+}

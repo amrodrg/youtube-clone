@@ -28,6 +28,8 @@ import {VideoPlayerComponent} from './video-player/video-player.component';
 import {AuthConfigModule} from './auth/auth-config.module';
 import {AuthInterceptor} from "angular-auth-oidc-client";
 import { VideoDetailComponent } from './video-detail/video-detail.component';
+import {AuthModule} from "@auth0/auth0-angular";
+import {environment} from '../environments/environment'
 
 @NgModule({
   declarations: [
@@ -60,6 +62,9 @@ import { VideoDetailComponent } from './video-detail/video-detail.component';
     VgOverlayPlayModule,
     VgBufferingModule,
     MatSnackBarModule,
+    AuthModule.forRoot({
+      ...environment.auth,
+    }),
     AuthConfigModule,
   ],
   providers: [
