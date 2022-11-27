@@ -3,10 +3,10 @@ package com.amr.youtubeclone.service;
 import com.amr.youtubeclone.dto.UploadVideoResponse;
 import com.amr.youtubeclone.dto.VideoDto;
 import com.amr.youtubeclone.model.Video;
+import com.amr.youtubeclone.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.amr.youtubeclone.repository.VideoRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +14,29 @@ public class VideoService {
 
     private final S3Service s3Service;
     private final VideoRepository videoRepository;
+    private final UserService userService;
+
+
+    Video getVideoById(String videoId) {
+        return videoRepository.findById(videoId)
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find video by id -" + videoId));
+    }
+
+
+    private VideoDto mapToVideoDto(Video video) {
+        VideoDto videoDto = new VideoDto();
+        videoDto.setId(video.getId());
+        videoDto.setVideoUrl(video.getVideoUrl());
+        videoDto.setVideoStatus(video.getVideoStatus());
+        videoDto.setDescription(video.getDescription());
+        videoDto.setTags(video.getTags());
+        videoDto.setTitle(video.getTitle());
+        videoDto.setThumbnailUrl(video.getThumbnailUrl());
+        videoDto.setLikeCount(video.getLikes().get());
+        videoDto.setDislikeCount(video.getDislikes().get());
+        videoDto.setViewCount(video.getViewCount().get());
+        return videoDto;
+    }
 
 
     public UploadVideoResponse uploadVideo(MultipartFile file) {
@@ -39,6 +62,7 @@ public class VideoService {
         return videoDto;
     }
 
+
     public String uploadThumbnail(MultipartFile file, String videoId) {
         Video savedVideo = getVideoById(videoId);
         String thumbnailUrl = s3Service.uploadFile(file);
@@ -49,23 +73,61 @@ public class VideoService {
         return thumbnailUrl;
     }
 
-    Video getVideoById(String videoId) {
-        return videoRepository.findById(videoId)
-                .orElseThrow(() -> new IllegalArgumentException("Cannot find video by id -" + videoId));
-    }
 
     public VideoDto getVideoDetails(String videoId) {
         Video savedVideo = getVideoById(videoId);
 
-        VideoDto videoDto = new VideoDto();
-        videoDto.setId(savedVideo.getId());
-        videoDto.setVideoUrl(savedVideo.getVideoUrl());
-        videoDto.setVideoStatus(savedVideo.getVideoStatus());
-        videoDto.setDescription(savedVideo.getDescription());
-        videoDto.setTags(savedVideo.getTags());
-        videoDto.setTitle(savedVideo.getTitle());
-        videoDto.setThumbnailUrl(savedVideo.getThumbnailUrl());
+        increaseVideoCount(savedVideo);
+        userService.addVideoToHistory(videoId);
 
-        return videoDto;
+        return mapToVideoDto(savedVideo);
+    }
+
+
+    private void increaseVideoCount(Video video) {
+        video.incrementViewCount();
+        videoRepository.save(video);
+    }
+
+
+    public VideoDto likeVideo(String videoId) {
+        Video savedVideo = getVideoById(videoId);
+
+        if (userService.ifLikedVideo(videoId)) {
+            savedVideo.decrementLikes();
+            userService.removeFromLikedVideos(videoId);
+        } else if (userService.ifDislikedVideo(videoId)) {
+            savedVideo.decrementDislikes();
+            userService.removeFromDislikedVideos(videoId);
+            userService.addToLikedVideo(videoId);
+        } else {
+            savedVideo.incrementLikes();
+            userService.addToLikedVideo(videoId);
+        }
+
+        videoRepository.save(savedVideo);
+
+        return mapToVideoDto(savedVideo);
+    }
+
+
+    public VideoDto dislikeVideo(String videoId) {
+        Video savedVideo = getVideoById(videoId);
+
+        if (userService.ifDislikedVideo(videoId)) {
+            savedVideo.decrementDislikes();
+            userService.removeFromDislikedVideos(videoId);
+        } else if (userService.ifLikedVideo(videoId)) {
+            savedVideo.decrementLikes();
+            userService.removeFromLikedVideos(videoId);
+            userService.addToDislikedVideo(videoId);
+        } else {
+            savedVideo.incrementDislikes();
+            userService.addToDislikedVideo(videoId);
+        }
+
+        videoRepository.save(savedVideo);
+
+        return mapToVideoDto(savedVideo);
     }
 }
