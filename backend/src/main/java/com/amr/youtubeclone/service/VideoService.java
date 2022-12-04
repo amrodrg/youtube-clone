@@ -1,12 +1,16 @@
 package com.amr.youtubeclone.service;
 
+import com.amr.youtubeclone.dto.CommentDto;
 import com.amr.youtubeclone.dto.UploadVideoResponse;
 import com.amr.youtubeclone.dto.VideoDto;
+import com.amr.youtubeclone.model.Comment;
 import com.amr.youtubeclone.model.Video;
 import com.amr.youtubeclone.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +40,13 @@ public class VideoService {
         videoDto.setDislikeCount(video.getDislikes().get());
         videoDto.setViewCount(video.getViewCount().get());
         return videoDto;
+    }
+
+    private CommentDto mapToCommentDto(Comment comment) {
+        CommentDto commentDto = new CommentDto();
+        commentDto.setCommentText(comment.getText());
+        commentDto.setAuthorId(comment.getAuthorId());
+        return commentDto;
     }
 
 
@@ -129,5 +140,26 @@ public class VideoService {
         videoRepository.save(savedVideo);
 
         return mapToVideoDto(savedVideo);
+    }
+
+    public void addComment(String videoId, CommentDto commentDto) {
+        Video video = getVideoById(videoId);
+        Comment comment = new Comment();
+        comment.setText(commentDto.getCommentText());
+        comment.setAuthorId(commentDto.getAuthorId());
+        video.addComment(comment);
+
+        videoRepository.save(video);
+    }
+
+    public List<CommentDto> getAllComments(String videoId) {
+        Video video = getVideoById(videoId);
+        List<Comment> commentList = video.getCommentList();
+
+        return commentList.stream().map(this::mapToCommentDto).toList();
+    }
+
+    public List<VideoDto> getAllVideos() {
+        return videoRepository.findAll().stream().map(this::mapToVideoDto).toList();
     }
 }
