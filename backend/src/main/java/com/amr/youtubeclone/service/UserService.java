@@ -2,13 +2,9 @@ package com.amr.youtubeclone.service;
 
 
 import com.amr.youtubeclone.model.User;
-import com.amr.youtubeclone.model.Video;
 import com.amr.youtubeclone.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +20,20 @@ public class UserService {
     UserRepository userRepository;
 
     public User getCurrentUser() {
-        String sub = ((Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getClaim("sub");
-
-        return userRepository.findBySub(sub)
-                .orElseThrow(()-> new IllegalArgumentException("Connot find user with sub - " + sub));
+//        String sub = ((Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getClaim("sub");
+//
+//        return userRepository.findBySub(sub)
+//                .orElseThrow(()-> new IllegalArgumentException("Connot find user with sub - " + sub));
+        return new User("9482918498u2",
+                "Amr", "Lion",
+                "Amr Lion",
+                "amr@email.com",
+                "23243",
+                ConcurrentHashMap.newKeySet(),
+                ConcurrentHashMap.newKeySet(),
+                ConcurrentHashMap.newKeySet(),
+                ConcurrentHashMap.newKeySet(),
+                ConcurrentHashMap.newKeySet());
     }
 
     public void addToLikedVideo(String videoId) {
