@@ -29,7 +29,11 @@ import {AuthConfigModule} from './auth/auth-config.module';
 import {AuthInterceptor} from "angular-auth-oidc-client";
 import { VideoDetailComponent } from './video-detail/video-detail.component';
 import {AuthModule} from "@auth0/auth0-angular";
-import {environment} from '../environments/environment'
+import {environment} from '../environments/environment';
+import { HomeComponent } from './home/home.component';
+import { HistoryComponent } from './history/history.component';
+import { LikedVideosComponent } from './liked-videos/liked-videos.component';
+import { SidebarComponent } from './sidebar/sidebar.component'
 
 @NgModule({
   declarations: [
@@ -38,7 +42,11 @@ import {environment} from '../environments/environment'
     HeaderComponent,
     SaveVideoDetailsComponent,
     VideoPlayerComponent,
-    VideoDetailComponent
+    VideoDetailComponent,
+    HomeComponent,
+    HistoryComponent,
+    LikedVideosComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
