@@ -35,4 +35,8 @@ export class VideoService {
   saveVideo(videoDto: VideoDto): Observable<VideoDto> {
     return this.httpClient.put<VideoDto>("http://localhost:8080/api/videos/", videoDto);
   }
+
+  getAllVideos(): Observable<Array<VideoDto>> {
+    return this.httpClient.get<Array<VideoDto>>("http://localhost:8080/api/videos");
+  }
 }
